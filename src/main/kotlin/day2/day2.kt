@@ -3,8 +3,7 @@ package day2
 import org.example.util.ResourceLoader
 import kotlin.math.abs
 
-@Suppress("UNCHECKED_CAST")
-val lines = ResourceLoader.getResourceFile("/day2.txt").useLines { input ->
+private val lines = ResourceLoader.getResourceFile("/day2.txt").useLines { input ->
     input.asIterable().map { line ->
         line.split(" ").map { it.toInt() }
     }
