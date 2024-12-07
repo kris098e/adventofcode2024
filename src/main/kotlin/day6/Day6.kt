@@ -6,7 +6,7 @@ typealias Coordinate = Pair<Int, Int> // Pair(Y,X)
 
 private class CycleDetectedException : RuntimeException()
 
-private val lines = ResourceLoader.getResourceFile("/day6/day6.txt").readLines()
+private val lines = ResourceLoader.getResourceFile("/day6/day6Test.txt").readLines()
 
 private val arrowRegex = Regex("<|\\^|>|v")
 private var currentMovementDirection = "^"
@@ -23,16 +23,13 @@ private var foundObstaclePath: MutableSet<Pair<String, Coordinate>> =
     mutableSetOf()// reset after trying putting in an obstacle
 
 private fun List<String>.isObsticaleInWay(): Boolean {
-    var hit: Coordinate? = null
-    when (currentMovementDirection) {
+    return when (currentMovementDirection) {
         "^" -> {
             if (currentCoordinate.first - 1 == -1) {
                 willMoveOut = true
                 return false
             };
-            if (this[currentCoordinate.first - 1][currentCoordinate.second] == '#') {
-                hit = Coordinate(currentCoordinate.first - 1, currentCoordinate.second)
-            }
+            this[currentCoordinate.first - 1][currentCoordinate.second] == '#'
         }
 
         ">" -> {
@@ -40,9 +37,7 @@ private fun List<String>.isObsticaleInWay(): Boolean {
                 willMoveOut = true
                 return false
             }
-            if (this[currentCoordinate.first][currentCoordinate.second + 1] == '#') {
-                hit = Coordinate(currentCoordinate.first, currentCoordinate.second + 1)
-            }
+               this[currentCoordinate.first][currentCoordinate.second + 1] == '#'
         }
 
         "v" -> {
@@ -50,30 +45,18 @@ private fun List<String>.isObsticaleInWay(): Boolean {
                 willMoveOut = true
                 return false
             }
-            if (this[currentCoordinate.first + 1][currentCoordinate.second] == '#') {
-                hit = Coordinate(currentCoordinate.first + 1, currentCoordinate.second)
-            }
+            this[currentCoordinate.first + 1][currentCoordinate.second] == '#'
         }
         "<" -> {
             if (currentCoordinate.second - 1 == -1) {
                 willMoveOut = true
                 return false
             }
-            if (this[currentCoordinate.first][currentCoordinate.second - 1] == '#') {
-                hit = Coordinate(currentCoordinate.first, currentCoordinate.second - 1)
-            }
+            this[currentCoordinate.first][currentCoordinate.second - 1] == '#'
         }
 
         else -> throw IllegalStateException("??????")
     }
-
-    if (hit != null) {
-        if (!foundObstaclePath.add(currentMovementDirection to hit)) { // found a cycle
-            throw CycleDetectedException()
-        }
-    }
-
-    return hit != null
 }
 
 private fun rotateGuard() {
@@ -141,18 +124,26 @@ fun part2() {
                 }
             }
 
+//            println("original: ${lines[i]}")
+//            println("replacem: ${linesCopy[i]}")
+
+            val seenCoordinates = mutableSetOf<Pair<String, Coordinate>>()
+
             try {
                 while (!willMoveOut) {
                     if (linesCopy.isObsticaleInWay()) {
                         rotateGuard()
                     }
+                    if (!seenCoordinates.add(currentMovementDirection to currentCoordinate)) {
+                        throw CycleDetectedException()
+                    }
                     moveGuard()
                 }
             } catch (_: CycleDetectedException) {
-                linesCopy.forEach {
-                    println(it)
-                }
-                println("-----\n\n")
+//                linesCopy.forEach {
+//                    println(it)
+//                }
+//                println("-----\n\n")
                 count++
             }
         }
