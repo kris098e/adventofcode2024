@@ -6,7 +6,7 @@ typealias Coordinate = Pair<Int, Int> // Pair(Y,X)
 
 private class CycleDetectedException : RuntimeException()
 
-private val lines = ResourceLoader.getResourceFile("/day6/day6Test.txt").readLines()
+private val lines = ResourceLoader.getResourceFile("/day6/day6.txt").readLines()
 
 private val arrowRegex = Regex("<|\\^|>|v")
 private var currentMovementDirection = "^"
@@ -114,18 +114,10 @@ fun part2() {
             willMoveOut = false
 
             val linesCopy = buildList {
-                lines.forEachIndexed { index, s ->
-                    val string = if (index == i) {
-                        s.replaceRange(startIndex = j, endIndex = j + 1, "#")
-                    } else {
-                        s
-                    }
-                    this@buildList.add(string)
-                }
-            }
+                lines.forEach{ this@buildList.add(it) }
+            }.toMutableList()
 
-//            println("original: ${lines[i]}")
-//            println("replacem: ${linesCopy[i]}")
+            linesCopy[i] = linesCopy[i].replaceRange(startIndex = j, endIndex = j + 1, "#")
 
             val seenCoordinates = mutableSetOf<Pair<String, Coordinate>>()
 
@@ -140,10 +132,6 @@ fun part2() {
                     moveGuard()
                 }
             } catch (_: CycleDetectedException) {
-//                linesCopy.forEach {
-//                    println(it)
-//                }
-//                println("-----\n\n")
                 count++
             }
         }
