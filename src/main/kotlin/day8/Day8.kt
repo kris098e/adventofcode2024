@@ -32,7 +32,7 @@ fun part1() {
                 val distance = lockedPoint2D.calculate2DDistanceTo(point2D)
                 val doubleDistance = Distance(distance.x * 2, distance.y * 2)
                 val newPoint = Point2D(lockedPoint2D.x + doubleDistance.x, lockedPoint2D.y + doubleDistance.y)
-                grid.ifPointWithGrid(newPoint) {
+                grid.ifPointWitinGrid(newPoint) {
                     seenPoints.add(newPoint)
                 }
             }
@@ -68,7 +68,7 @@ fun part2() {
                         lockedPoint2D.x + (distance.x * count),
                         lockedPoint2D.y + (distance.y * count)
                     )
-                    grid.ifPointWithGrid(newPoint2D) {
+                    grid.ifPointWitinGrid(newPoint2D) {
                         seenPoints.add(newPoint2D)
                     }
                     count++
