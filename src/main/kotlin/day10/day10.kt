@@ -32,18 +32,18 @@ private fun Map<Point2D, Int>.sorroundedByTill9(point: Point2D, pointValue: Int,
     }
 }
 
-fun part1() {
+private fun solver(collectionFactory: () -> MutableCollection<Point2D>) {
     lines.filter { it.value == 0 }.map { (point, _) ->
-        val point9sSeen = mutableSetOf<Point2D>()
-        lines.sorroundedByTill9(point, 0, point9sSeen)
-        return@map point9sSeen
+        val collection = collectionFactory()
+        lines.sorroundedByTill9(point, 0, collection)
+        return@map collection
     }.sumOf { it.size }.let(::println)
 }
 
+fun part1() {
+    solver { mutableSetOf() }
+}
+
 fun part2() {
-    lines.filter { it.value == 0 }.map { (point, _) ->
-        val point9sSeen = mutableListOf<Point2D>()
-        lines.sorroundedByTill9(point, 0, point9sSeen)
-        return@map point9sSeen
-    }.sumOf { it.size }.let(::println)
+    solver { mutableListOf() }
 }
