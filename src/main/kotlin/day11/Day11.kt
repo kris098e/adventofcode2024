@@ -19,6 +19,7 @@ fun solver(rounds: Int) {
                 key == 0L -> {
                     roundResultMap.merge(1L, count) { old, new -> old + new }
                 }
+
                 key.toString().length % 2 == 0 -> {
                     val toString = key.toString()
                     val firstHalf = toString.substring(0, toString.length / 2).toLong()
@@ -29,6 +30,7 @@ fun solver(rounds: Int) {
                     roundResultMap.merge(firstHalf, count) { old, new -> old + new }
                     roundResultMap.merge(secondHalfKey, count) { old, new -> old + new }
                 }
+
                 else -> {
                     roundResultMap.merge(key * 2024, count) { old, new -> old + new }
                 }
