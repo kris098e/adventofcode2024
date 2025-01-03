@@ -1,4 +1,4 @@
-package org.example.util
+package util
 
 data class Grid(
     val upperX: Int,

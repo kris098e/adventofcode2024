@@ -1,4 +1,4 @@
-package org.example.util
+package util
 
 import kotlin.math.abs
 
