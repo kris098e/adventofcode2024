@@ -1,3 +1,4 @@
+import util.DIRECTION
 import util.Grid
 import util.Point2D
 import util.ResourceLoader
@@ -60,12 +61,37 @@ object Day12 {
         println(perimeterToRegionSize.sumOf { it.first * it.second })
     }
 
+    /**
+     * if you are seeing this, using flatMap and using map inside of the flatMap could
+     * be replaced by sumOf and count and returning 1 inside the count for each matched condition would be simpler.
+     * But a bit of debugging went into this
+     */
     fun part2() {
         val regions = findRegions()
-        // Dont have to look at the neighboars, we have already calculated the regions. Just do it by what is already contained in the region
-        val sides = regions.map { region ->
-            val seenX = mutableSetOf<Int>()
-            val seenY = mutableSetOf<Int>()
-        }
+
+        regions.map { region ->
+            region to region.flatMap { (point, c) ->
+
+                // find corners
+                listOf(DIRECTION.UP, DIRECTION.RIGHT, DIRECTION.DOWN, DIRECTION.LEFT, DIRECTION.UP)
+                    .zipWithNext()
+                    .map { (d1, d2) ->
+                        val d1Point = d1.getDirectionPoint(point)
+                        val d2Point = d2.getDirectionPoint(point)
+
+                        val isDirectCorner = (lines[d1Point] != c || lines[d1Point] == null) && (lines[d2Point] != c || lines[d2Point] == null) // missing something about if the the point neighbours are not in the grid
+                        if (isDirectCorner) return@map Triple(d1Point to d1, d2Point to d2, 1)
+
+                        val upDownPoint = if (d1 == DIRECTION.UP || d1 == DIRECTION.DOWN) d1Point else d2Point
+                        val sidePoint = if (d1 == DIRECTION.UP || d1 == DIRECTION.DOWN) d2Point else d1Point
+                        val extraCornerCheck = Point2D(sidePoint.x, upDownPoint.y)
+                        if(lines[upDownPoint] != c && lines[sidePoint] == c && lines[extraCornerCheck] == c) return@map Triple(d1Point to d1, d2Point to d2, 2)
+                        else return@map Triple(d1Point to d1, d2Point to d2, 0)
+                    }
+            }
+        }.fold(0) { acc, (region, corners) ->
+            // println("region: $region, corners: ${corners.filter { it.third != 0 }}, numCorners: ${corners.filter { it.third != 0 }.size}")
+            acc + region.size * corners.filter { it.third != 0 }.size
+        }.let(::println)
     }
 }
