@@ -5,14 +5,14 @@ object Day13 {
     private data class Game(val buttonA: XYValues, val buttonB: XYValues, val target: XYValues)
 
     private val games = ResourceLoader.useResourceFile("/day13/day13.txt") { lines ->
-        val subtractNums = Regex("\\d+")
+        val extractNums = Regex("\\d+")
         buildList {
             lines.filter { it.isNotBlank() }
                 .windowed(3, 3, true) { window ->
                     val (a, b, c) = window
-                    val (aX, aY) = subtractNums.findAll(a).map { it.value.toLong() }.toList()
-                    val (bX, bY) = subtractNums.findAll(b).map { it.value.toLong() }.toList()
-                    val (cX, cY) = subtractNums.findAll(c).map { it.value.toLong() }.toList()
+                    val (aX, aY) = extractNums.findAll(a).map { it.value.toLong() }.toList()
+                    val (bX, bY) = extractNums.findAll(b).map { it.value.toLong() }.toList()
+                    val (cX, cY) = extractNums.findAll(c).map { it.value.toLong() }.toList()
                     add(Game(XYValues(aX, aY), XYValues(bX, bY), XYValues(cX, cY)))
                 }
         }
