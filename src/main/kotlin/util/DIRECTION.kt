@@ -16,21 +16,33 @@ enum class DIRECTION(val char: Char) {
         }
     }
 
-    fun getLeftOfPoint(point2D: Point2D): Point2D {
+    fun turnRight(): DIRECTION {
         return when (this) {
-            UP -> Point2D(point2D.x - 1, point2D.y)
-            RIGHT -> Point2D(point2D.x, point2D.y - 1)
-            DOWN -> Point2D(point2D.x + 1, point2D.y)
-            LEFT -> Point2D(point2D.x, point2D.y + 1)
+            UP -> RIGHT
+            RIGHT -> DOWN
+            DOWN -> LEFT
+            LEFT -> UP
         }
     }
 
-    fun getRightOfPoint(point2D: Point2D): Point2D {
+    fun turnLeft(): DIRECTION {
         return when (this) {
-            UP -> Point2D(point2D.x + 1, point2D.y)
-            RIGHT -> Point2D(point2D.x, point2D.y + 1)
-            DOWN -> Point2D(point2D.x - 1, point2D.y)
-            LEFT -> Point2D(point2D.x, point2D.y - 1)
+            UP -> LEFT
+            RIGHT -> UP
+            DOWN -> RIGHT
+            LEFT -> DOWN
+        }
+    }
+
+    companion object {
+        fun getDirectionForPoint(point2D: Point2D, toPoint2D: Point2D): DIRECTION {
+            return when {
+                point2D.x == toPoint2D.x && point2D.y > toPoint2D.y -> UP
+                point2D.x == toPoint2D.x && point2D.y < toPoint2D.y -> DOWN
+                point2D.x > toPoint2D.x && point2D.y == toPoint2D.y -> LEFT
+                point2D.x < toPoint2D.x && point2D.y == toPoint2D.y -> RIGHT
+                else -> throw IllegalArgumentException("No direction found")
+            }
         }
     }
 }
